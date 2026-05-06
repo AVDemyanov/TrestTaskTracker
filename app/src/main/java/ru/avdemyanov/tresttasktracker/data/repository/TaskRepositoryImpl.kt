@@ -1,5 +1,6 @@
 package ru.avdemyanov.tresttasktracker.data.repository
 
+import android.R.attr.description
 import ru.avdemyanov.tresttasktracker.data.local.TaskDao
 import ru.avdemyanov.tresttasktracker.data.local.TaskEntity
 import ru.avdemyanov.tresttasktracker.data.local.TaskStatus as EntityStatus  // алиас для data
@@ -23,10 +24,11 @@ class TaskRepositoryImpl(
             entities.map { it.toDomain() }
         }
 
-    override suspend fun addTask(title: String) {
+    override suspend fun addTask(title: String, description: String) {
         val task = TaskEntity(
             title = title,
-            status = EntityStatus.ACTIVE   // явно из data.local
+            description = description,
+            status = EntityStatus.ACTIVE
         )
         taskDao.insert(task)
     }
@@ -42,8 +44,9 @@ class TaskRepositoryImpl(
     private fun TaskEntity.toDomain(): Task = Task(
         id = id,
         title = title,
-        status = when (status) {          // status здесь типа EntityStatus
-            EntityStatus.ACTIVE -> TaskStatus.ACTIVE      // domain-версия
+        description = description,
+        status = when (status) {
+            EntityStatus.ACTIVE -> TaskStatus.ACTIVE
             EntityStatus.COMPLETED -> TaskStatus.COMPLETED
             EntityStatus.DELETED -> TaskStatus.DELETED
         },

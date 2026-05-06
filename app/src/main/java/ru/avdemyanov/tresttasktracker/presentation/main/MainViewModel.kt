@@ -35,10 +35,10 @@ class MainViewModel(
         }
     }
 
-    fun addTask(title: String) {
+    fun addTask(title: String, description: String) {
         viewModelScope.launch {
             try {
-                addTaskUseCase(title)
+                addTaskUseCase(title, description)
             } catch (e: IllegalStateException) {
                 _errorMessage.emit(e.message ?: "Ошибка добавления задачи")
             }

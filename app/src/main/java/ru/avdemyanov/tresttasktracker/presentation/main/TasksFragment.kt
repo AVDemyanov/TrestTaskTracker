@@ -119,12 +119,8 @@ class TasksFragment : Fragment() {
     }
 
     private fun showAddTaskDialog() {
-        val dialog = AddTaskDialogFragment { title ->
-            if (title.isNotBlank()) {
-                viewModel.addTask(title)
-            } else {
-                Toast.makeText(requireContext(), "Введите название задачи", Toast.LENGTH_SHORT).show()
-            }
+        val dialog = AddTaskDialogFragment { title, description ->
+            viewModel.addTask(title, description)
         }
         dialog.show(parentFragmentManager, "AddTaskDialog")
     }
