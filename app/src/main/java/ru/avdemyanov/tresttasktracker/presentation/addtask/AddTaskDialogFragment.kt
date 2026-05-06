@@ -3,6 +3,7 @@ package ru.avdemyanov.tresttasktracker.presentation.addtask
 
 import android.app.Dialog
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import ru.avdemyanov.tresttasktracker.databinding.DialogAddTaskBinding
@@ -19,10 +20,17 @@ class AddTaskDialogFragment(private val onTaskAdded: (String) -> Unit) : DialogF
             .setTitle("Новая задача")
             .setPositiveButton("Добавить") { _, _ ->
                 val title = binding.editTaskTitle.text.toString().trim()
-                if (title.isNotEmpty()) {
-                    onTaskAdded(title)
+                when {
+                    title.isEmpty() -> {
+                        Toast.makeText(requireContext(),"Название не может быть пустым", Toast.LENGTH_SHORT).show()
+                    }
+                    title.length > 150 -> {
+                        Toast.makeText(requireContext(),"Название должно быть короче 150 символов",
+                            Toast.LENGTH_SHORT).show()
+                    }
+                    else -> onTaskAdded(title)
                 }
-            }
+                }
             .setNegativeButton("Отмена", null)
             .create()
     }

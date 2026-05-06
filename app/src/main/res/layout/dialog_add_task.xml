@@ -10,6 +10,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Название задачи"
-        android:inputType="text" />
+        android:inputType="textCapSentences|textAutoCorrect"
+        android:maxLength="150"
+        android:singleLine="true"/>
+
 
 </LinearLayout>

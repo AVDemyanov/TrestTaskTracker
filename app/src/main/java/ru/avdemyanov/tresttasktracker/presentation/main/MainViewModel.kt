@@ -2,8 +2,11 @@ package ru.avdemyanov.tresttasktracker.presentation.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import ru.avdemyanov.tresttasktracker.domain.model.Task
@@ -21,6 +24,8 @@ class MainViewModel(
 
     private val _tasks = MutableStateFlow<List<Task>>(emptyList())
     val tasks: StateFlow<List<Task>> = _tasks.asStateFlow()
+    private val _errorMessage = MutableSharedFlow<String>()
+    val errorMessage: SharedFlow<String> = _errorMessage.asSharedFlow()
 
     init {
         viewModelScope.launch {
@@ -32,7 +37,11 @@ class MainViewModel(
 
     fun addTask(title: String) {
         viewModelScope.launch {
-            addTaskUseCase(title)
+            try {
+                addTaskUseCase(title)
+            } catch (e: IllegalStateException) {
+                _errorMessage.emit(e.message ?: "Ошибка добавления задачи")
+            }
         }
     }
 
