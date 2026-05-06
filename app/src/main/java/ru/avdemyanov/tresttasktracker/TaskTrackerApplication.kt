@@ -1,6 +1,7 @@
 package ru.avdemyanov.tresttasktracker
 
 import android.app.Application
+import androidx.appcompat.app.AppCompatDelegate
 import ru.avdemyanov.tresttasktracker.data.local.TaskDatabase
 import ru.avdemyanov.tresttasktracker.domain.repository.TaskRepository
 import ru.avdemyanov.tresttasktracker.data.repository.TaskRepositoryImpl
@@ -23,4 +24,8 @@ class TaskTrackerApplication: Application() {
     val addTaskUseCase by lazy { AddTaskUseCase(taskRepository) }
     val completeTaskUseCase by lazy { CompleteTaskUseCase(taskRepository) }
     val deleteTaskUseCase by lazy { DeleteTaskUseCase(taskRepository) }
+    override fun onCreate() {
+        super.onCreate()
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+    }
 }
