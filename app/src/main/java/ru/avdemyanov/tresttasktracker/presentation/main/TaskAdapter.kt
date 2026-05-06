@@ -5,10 +5,12 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.avdemyanov.tresttasktracker.databinding.ItemTaskBinding
 import ru.avdemyanov.tresttasktracker.domain.model.Task
+import java.security.PrivateKey
 
 class TaskAdapter(
     private val onCompleteClick: (Long) -> Unit,
-    private val onDeleteClick: (Long) -> Unit
+    private val onDeleteClick: (Long) -> Unit,
+    private val onItemClick: (Task) -> Unit
 ) : RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
 
     var tasks: List<Task> = emptyList()
@@ -46,6 +48,9 @@ class TaskAdapter(
 
             binding.buttonDelete.setOnClickListener {
                 onDeleteClick(task.id)
+            }
+            binding.root.setOnClickListener {
+                onItemClick(task)
             }
         }
     }

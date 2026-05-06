@@ -1,19 +1,18 @@
 package ru.avdemyanov.tresttasktracker.presentation.main
 
+import android.app.AlertDialog
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.avdemyanov.tresttasktracker.R
@@ -22,7 +21,6 @@ import ru.avdemyanov.tresttasktracker.databinding.FragmentTasksBinding
 import ru.avdemyanov.tresttasktracker.domain.model.Task
 import ru.avdemyanov.tresttasktracker.presentation.addtask.AddTaskDialogFragment
 import ru.avdemyanov.tresttasktracker.presentation.utils.ViewModelFactory
-
 
 
 class TasksFragment : Fragment() {
@@ -44,7 +42,6 @@ class TasksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
 
         val app = requireActivity().application as TaskTrackerApplication
         val factory = ViewModelFactory(
@@ -78,7 +75,8 @@ class TasksFragment : Fragment() {
     private fun setupRecyclerView() {
         adapter = TaskAdapter(
             onCompleteClick = { taskId -> viewModel.completeTask(taskId) },
-            onDeleteClick = { taskId -> viewModel.deleteTask(taskId) }
+            onDeleteClick = { taskId -> viewModel.deleteTask(taskId) },
+            onItemClick = { task -> showTaskDetailDialog(task) }
         )
         binding.recyclerViewTasks.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewTasks.adapter = adapter
@@ -123,6 +121,14 @@ class TasksFragment : Fragment() {
             viewModel.addTask(title, description)
         }
         dialog.show(parentFragmentManager, "AddTaskDialog")
+    }
+
+    private fun showTaskDetailDialog(task: Task) {
+        AlertDialog.Builder(requireContext())
+            .setTitle(task.title)
+            .setMessage(task.description.ifEmpty { "Нет описания" })
+            .setPositiveButton("Закрыть", null)
+            .show()
     }
 
     override fun onDestroyView() {
