@@ -40,6 +40,7 @@ class TasksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
         val app = requireActivity().application as TaskTrackerApplication
         val factory = ViewModelFactory(
             mapOf(
