@@ -6,19 +6,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.avdemyanov.tresttasktracker.R
 import ru.avdemyanov.tresttasktracker.TaskTrackerApplication
 import ru.avdemyanov.tresttasktracker.databinding.FragmentTasksBinding
+import ru.avdemyanov.tresttasktracker.domain.model.Task
 import ru.avdemyanov.tresttasktracker.presentation.addtask.AddTaskDialogFragment
 import ru.avdemyanov.tresttasktracker.presentation.utils.ViewModelFactory
+
+
 
 class TasksFragment : Fragment() {
 
@@ -59,6 +64,7 @@ class TasksFragment : Fragment() {
         setupRecyclerView()
         setupSwipeToDelete()
         observeTasks()
+        observeErrors()
 
         binding.buttonAddTask.setOnClickListener {
             showAddTaskDialog()
@@ -104,13 +110,20 @@ class TasksFragment : Fragment() {
         }
     }
 
+    private fun observeErrors() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.errorMessage.collect { message ->
+                Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
     private fun showAddTaskDialog() {
         val dialog = AddTaskDialogFragment { title ->
             if (title.isNotBlank()) {
                 viewModel.addTask(title)
             } else {
-                Toast.makeText(requireContext(), "Введите название задачи", Toast.LENGTH_SHORT)
-                    .show()
+                Toast.makeText(requireContext(), "Введите название задачи", Toast.LENGTH_SHORT).show()
             }
         }
         dialog.show(parentFragmentManager, "AddTaskDialog")
