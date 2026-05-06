@@ -14,5 +14,14 @@
         android:maxLength="150"
         android:singleLine="true"/>
 
-
+    <EditText
+        android:id="@+id/editTaskDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:hint="Описание (до 1000 символов, необязательно)"
+        android:inputType="textMultiLine"
+        android:maxLength="1000"
+        android:minLines="3"
+        android:gravity="top" />
 </LinearLayout>

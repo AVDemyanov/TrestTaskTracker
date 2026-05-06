@@ -8,7 +8,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
 import ru.avdemyanov.tresttasktracker.databinding.DialogAddTaskBinding
 
-class AddTaskDialogFragment(private val onTaskAdded: (String) -> Unit) : DialogFragment() {
+
+
+class AddTaskDialogFragment(private val onTaskAdded: (title: String, description: String) -> Unit) : DialogFragment() {
 
     private lateinit var binding: DialogAddTaskBinding
 
@@ -20,17 +22,21 @@ class AddTaskDialogFragment(private val onTaskAdded: (String) -> Unit) : DialogF
             .setTitle("Новая задача")
             .setPositiveButton("Добавить") { _, _ ->
                 val title = binding.editTaskTitle.text.toString().trim()
+                val description = binding.editTaskDescription.text.toString().trim() // получаем описание
+
                 when {
                     title.isEmpty() -> {
-                        Toast.makeText(requireContext(),"Название не может быть пустым", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Название не может быть пустым", Toast.LENGTH_SHORT).show()
                     }
                     title.length > 150 -> {
-                        Toast.makeText(requireContext(),"Название должно быть короче 150 символов",
-                            Toast.LENGTH_SHORT).show()
+                        Toast.makeText(requireContext(), "Название должно быть короче 150 символов", Toast.LENGTH_SHORT).show()
                     }
-                    else -> onTaskAdded(title)
+                    description.length > 1000 -> {
+                        Toast.makeText(requireContext(), "Описание должно быть короче 1000 символов", Toast.LENGTH_SHORT).show()
+                    }
+                    else -> onTaskAdded(title, description) // передаём оба параметра
                 }
-                }
+            }
             .setNegativeButton("Отмена", null)
             .create()
     }
